@@ -1,4 +1,4 @@
-module multitime
+module github.com/JasonLovesDoggo/multitime
 
 go 1.23
 

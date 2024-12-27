@@ -11,7 +11,7 @@ MultiTime is a WakaTime proxy that forwards your coding activity to multiple Wak
 - Debug logging for troubleshooting
 
 ## Installation
-
+(Requires golang 1.23+)
 ```bash
 # Clone the repository
 go install github.com/JasonLovesDoggo/multitime@latest
