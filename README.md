@@ -79,12 +79,17 @@ is_primary = false  # true if you want to use HighSeas for status queries
 
 MultiTime currently supports these WakaTime API endpoints:
 
-### POST `/api/v1/users/current/heartbeats`
+### POST `/users/current/heartbeats
 - Forwards coding activity heartbeats to all configured backends
 - Returns the response from the primary backend
 - Adds custom user agent identifier
 
-### GET `/api/v1/users/current/status_bar/today`
+### POST `/users/current/heartbeats.bulk`
+- Forwards multiple heartbeats to all configured backends
+- Returns the response from the primary backend
+- Adds custom user agent identifier
+
+### GET `/users/current/statusbar/today`
 - Retrieves today's coding activity summary from the primary backend
 - Used by IDE plugins for status bar updates
 - Returns cached data if available, empty summary if not
