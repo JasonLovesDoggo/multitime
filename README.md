@@ -62,7 +62,7 @@ multitime config.toml
 
 ### Using with Hack Club HighSeas
 
-[Hack Club HighSeas](https://github.com/hackclub/highseas) is a self-hosted WakaTime-compatible backend. To use MultiTime with HighSeas:
+[Hack Club HighSeas](https://highseas.hackclub.com/) is a self-hosted WakaTime-compatible backend. To use MultiTime with HighSeas:
 
 1. Set up your HighSeas instance
 2. Get your API key from HighSeas
