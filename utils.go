@@ -35,3 +35,19 @@ func forwardHeartbeat(heartbeat []byte, userAgent string, backend Backend) (*htt
 	}
 	return client.Do(req)
 }
+
+func forwardHeartbeats(heartbeat []byte, userAgent string, backend Backend) (*http.Response, error) {
+	req, err := http.NewRequest("POST", backend.URL+"/api/v1/users/current/heartbeats.bulk", bytes.NewReader(heartbeat))
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Set("Authorization", fmt.Sprintf("Basic %s", base64.StdEncoding.EncodeToString([]byte(backend.APIKey))))
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("User-Agent", userAgent+" (JasonLovesDoggo/multitime)")
+
+	client := &http.Client{
+		Timeout: 10 * time.Second,
+	}
+	return client.Do(req)
+}

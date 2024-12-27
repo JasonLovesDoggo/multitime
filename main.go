@@ -24,9 +24,16 @@ func main() {
 
 	setupLogging(config.Debug)
 
-	http.HandleFunc("/api/v1/users/current/heartbeats", handleHeartbeat)
-	http.HandleFunc("/api/v1/users/current/status_bar/today", handleStatusBar)
+	http.HandleFunc("/users/current/heartbeats", handleHeartbeat)
+	http.HandleFunc("/users/current/heartbeats.bulk", handleHeartbeatsBulk)
+	http.HandleFunc("/users/current/statusbar/today", handleStatusBar)
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		// The "/" matches anything not handled elsewhere. If it's not the root
+		// then report not found.
 
+		debugLog.Printf("404 Not Found: %s", r.URL.Path)
+		http.NotFound(w, r)
+	})
 	log.Printf("Starting MultiTime server on port %d", config.Port)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", config.Port), nil))
 }
