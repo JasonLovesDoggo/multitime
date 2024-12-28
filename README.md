@@ -70,7 +70,7 @@ multitime config.toml
 ```toml
 [[backends]]
 name = "HackClub WakaTime"
-url = "https://waka.hackclub.com""
+url = "https://waka.hackclub.com"
 api_key = "your-highseas-api-key"
 is_primary = false  # true if you want to use HighSeas for status queries
 ```
