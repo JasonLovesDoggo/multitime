@@ -30,7 +30,7 @@ func handleStatusBar(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Forward to primary backend only since this is a GET request
-	req, err := http.NewRequest("GET", primaryBackend.URL+"/api/v1/users/current/statusbar/today", nil)
+	req, err := http.NewRequest("GET", primaryBackend.URL+"/v1/users/current/statusbar/today", nil)
 	if err != nil {
 		http.Error(w, "Error creating request", http.StatusInternalServerError)
 		return
