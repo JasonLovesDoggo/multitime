@@ -10,7 +10,7 @@ type Backend struct {
 	Name      string `toml:"name"`
 	URL       string `toml:"url"`
 	APIKey    string `toml:"api_key"`
-	IsPrimary bool   `toml:"is_primary"`
+	IsPrimary bool   `toml:"is_primary,omitempty"` // omitempty allows the field to be optional
 }
 
 type Config struct {
@@ -42,8 +42,11 @@ func loadConfig(path string) (*Config, error) {
 			primaryCount++
 		}
 	}
-	if primaryCount != 1 {
-		return nil, fmt.Errorf("exactly one backend must be marked as primary")
+	if primaryCount == 0 {
+		return nil, fmt.Errorf("no primary backend set - exactly one backend must be marked with is_primary = true")
+	}
+	if primaryCount > 1 {
+		return nil, fmt.Errorf("multiple primary backends found - exactly one backend must be marked with is_primary = true")
 	}
 
 	return &cfg, nil

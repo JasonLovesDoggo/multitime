@@ -38,13 +38,11 @@ is_primary = true  # Primary backend for status queries
 name = "Hack Club Hackatime"
 url = "https://waka.hackclub.com/api"
 api_key = "your-hackatime-api-key"
-is_primary = false
 
 [[backends]]
 name = "Hack Club Hackatime v2"
 url = "https://hackatime.hackclub.com/api/hackatime"
 api_key = "your-hackatimev2-api-key"
-is_primary = false
 
 # Add more backends as needed
 ```
@@ -54,7 +52,7 @@ is_primary = false
 - `name`: Identifier for the backend (used in logs)
 - `url`: Base API URL of the WakaTime-compatible API
 - `api_key`: Your API key for that backend
-- `is_primary`: Set to `true` for one backend only - used for status queries
+- `is_primary`: Set to `true` for one backend only - used for status queries (optional)
 
 ## Usage
 
