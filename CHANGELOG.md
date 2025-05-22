@@ -1,5 +1,5 @@
 # v1.0.0
-- Config file now expects you to have a suffix of /api to support additional backends.
+- Config file now requires backend URLs to include an `/api` prefix before versioned endpoints to support additional backends.
 - Fixed issue where heartbeat and bulk heartbeat endpoints were swapped
 - Added unit and integration tests
 
