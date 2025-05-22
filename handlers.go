@@ -77,7 +77,7 @@ func handleHeartbeatsBulk(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	heartbeat, err := io.ReadAll(r.Body)
+	heartbeats, err := io.ReadAll(r.Body)
 	if err != nil {
 		http.Error(w, "Error reading request", http.StatusBadRequest)
 		return
@@ -85,12 +85,12 @@ func handleHeartbeatsBulk(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 
 	// Validate JSON
-	if !json.Valid(heartbeat) {
+	if !json.Valid(heartbeats) {
 		http.Error(w, "Invalid JSON", http.StatusBadRequest)
 		return
 	}
 
-	debugLog.Printf("Received heartbeat: %s", string(heartbeat))
+	debugLog.Printf("Received bulk heartbeats: %s", string(heartbeats))
 
 	var wg sync.WaitGroup
 	var primaryResp *http.Response
@@ -106,7 +106,7 @@ func handleHeartbeatsBulk(w http.ResponseWriter, r *http.Request) {
 		wg.Add(1)
 		go func(b Backend) {
 			defer wg.Done()
-			resp, err := forwardHeartbeat(heartbeat, r.UserAgent(), b)
+			resp, err := forwardHeartbeats(heartbeats, r.UserAgent(), b)
 			respChan <- struct {
 				resp    *http.Response
 				err     error
@@ -196,7 +196,7 @@ func handleHeartbeat(w http.ResponseWriter, r *http.Request) {
 		wg.Add(1)
 		go func(b Backend) {
 			defer wg.Done()
-			resp, err := forwardHeartbeats(heartbeat, r.UserAgent(), b)
+			resp, err := forwardHeartbeat(heartbeat, r.UserAgent(), b)
 			respChan <- struct {
 				resp    *http.Response
 				err     error
