@@ -39,7 +39,15 @@ func forwardHeartbeat(heartbeat []byte, userAgent string, backend Backend) (*htt
 		return resp, err
 	}
 	if resp.StatusCode != 202 {
-		debugLog.Printf("Error response from %s - Status: %d", backend.URL, resp.StatusCode)
+		body, err := io.ReadAll(resp.Body)
+		if err != nil {
+			debugLog.Printf("Error response from %s - Status: %d, Error reading body: %v", backend.URL, resp.StatusCode, err)
+		} else {
+			debugLog.Printf("Error response from %s - Status: %d, Body: %s", backend.URL, resp.StatusCode, string(body))
+		}
+		resp.Body.Close()
+		// Create a new reader with the same content for the next consumer
+		resp.Body = io.NopCloser(bytes.NewBuffer(body))
 	}
 	return resp, nil
 }
@@ -64,7 +72,15 @@ func forwardHeartbeats(heartbeat []byte, userAgent string, backend Backend) (*ht
 		return resp, err
 	}
 	if resp.StatusCode != 202 {
-		debugLog.Printf("Error response from %s - Status: %d", backend.URL, resp.StatusCode)
+		body, err := io.ReadAll(resp.Body)
+		if err != nil {
+			debugLog.Printf("Error response from %s - Status: %d, Error reading body: %v", backend.URL, resp.StatusCode, err)
+		} else {
+			debugLog.Printf("Error response from %s - Status: %d, Body: %s", backend.URL, resp.StatusCode, string(body))
+		}
+		resp.Body.Close()
+		// Create a new reader with the same content for the next consumer
+		resp.Body = io.NopCloser(bytes.NewBuffer(body))
 	}
 	return resp, nil
 }
