@@ -71,6 +71,62 @@ func handleStatusBar(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func handleStatsLast7Days(w http.ResponseWriter, r *http.Request) {
+	debugLog.Printf("Stats last 7 days request: %s", r.UserAgent())
+	if r.Method != http.MethodGet {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	var primaryResp *http.Response
+	var primaryErr error
+
+	// Find primary backend
+	var primaryBackend Backend
+	for _, b := range config.Backends {
+		if b.IsPrimary {
+			primaryBackend = b
+			break
+		}
+	}
+
+	// Forward to primary backend only since this is a GET request
+	req, err := http.NewRequest("GET", primaryBackend.URL+"/v1/users/current/stats/last_7_days", nil)
+	if err != nil {
+		http.Error(w, "Error creating request", http.StatusInternalServerError)
+		return
+	}
+
+	req.Header.Set("Authorization", fmt.Sprintf("Basic %s", base64.StdEncoding.EncodeToString([]byte(primaryBackend.APIKey))))
+	req.Header.Set("User-Agent", r.UserAgent()+" (JasonLovesDoggo/multitime)")
+
+	client := &http.Client{
+		Timeout: 10 * time.Second,
+	}
+	primaryResp, primaryErr = client.Do(req)
+
+	if primaryErr != nil {
+		debugLog.Printf("Primary backend error: %v", primaryErr)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+
+	defer primaryResp.Body.Close()
+
+	// Copy headers from primary response
+	for key, values := range primaryResp.Header {
+		for _, value := range values {
+			w.Header().Add(key, value)
+		}
+	}
+
+	// Copy status code and body
+	w.WriteHeader(primaryResp.StatusCode)
+	if _, err := io.Copy(w, primaryResp.Body); err != nil {
+		debugLog.Printf("Error copying response body: %v", err)
+	}
+}
+
 func handleHeartbeatsBulk(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
