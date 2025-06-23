@@ -38,7 +38,7 @@ func forwardHeartbeat(heartbeat []byte, userAgent string, backend Backend) (*htt
 		debugLog.Printf("Error forwarding heartbeat to %s: %v", backend.URL, err)
 		return resp, err
 	}
-	if resp.StatusCode != 202 {
+	if resp.StatusCode != 201 {
 		body, err := io.ReadAll(resp.Body)
 		if err != nil {
 			debugLog.Printf("Error response from %s - Status: %d, Error reading body: %v", backend.URL, resp.StatusCode, err)
@@ -71,7 +71,7 @@ func forwardHeartbeats(heartbeat []byte, userAgent string, backend Backend) (*ht
 		debugLog.Printf("Error forwarding bulk heartbeats to %s: %v", backend.URL, err)
 		return resp, err
 	}
-	if resp.StatusCode != 202 {
+	if resp.StatusCode != 201 {
 		body, err := io.ReadAll(resp.Body)
 		if err != nil {
 			debugLog.Printf("Error response from %s - Status: %d, Error reading body: %v", backend.URL, resp.StatusCode, err)
