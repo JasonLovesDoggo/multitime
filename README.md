@@ -11,7 +11,9 @@ MultiTime is a WakaTime proxy that forwards your coding activity to multiple Wak
 - Debug logging for troubleshooting
 
 ## Installation
+
 (Requires golang 1.23+)
+
 ```bash
 # Clone the repository
 go install github.com/JasonLovesDoggo/multitime@latest
@@ -28,15 +30,19 @@ log_file = "multitime.log"  # Optional, logs to stdout if not specified
 
 [[backends]]
 name = "Official WakaTime"
-url = "https://wakatime.com"
+url = "https://wakatime.com/api"
 api_key = "your-wakatime-api-key"
 is_primary = true  # Primary backend for status queries
 
 [[backends]]
-name = "Hack Club HighSeas"
-url = "https://waka.hackclub.com"
-api_key = "your-highseas-api-key"
-is_primary = false
+name = "Hack Club Hackatime"
+url = "https://waka.hackclub.com/api"
+api_key = "your-hackatime-api-key"
+
+[[backends]]
+name = "Hack Club Hackatime v2"
+url = "https://hackatime.hackclub.com/api/hackatime"
+api_key = "your-hackatimev2-api-key"
 
 # Add more backends as needed
 ```
@@ -44,13 +50,14 @@ is_primary = false
 ### Backend Configuration
 
 - `name`: Identifier for the backend (used in logs)
-- `url`: Base URL of the WakaTime-compatible API
+- `url`: Base API URL of the WakaTime-compatible API
 - `api_key`: Your API key for that backend
-- `is_primary`: Set to `true` for one backend only - used for status queries
+- `is_primary`: Set to `true` for one backend only - used for status queries (optional)
 
 ## Usage
 
 1. Start the server:
+
 ```bash
 multitime config.toml
 ```
@@ -60,36 +67,24 @@ multitime config.toml
    - Set the API URL to `http://localhost:3000` (if you don't see a setting, try editing `~/.wakatime.cfg`)
    - Set any valid string as the API key (it will be replaced with the correct key for each backend)
 
-### Using with Hack Club HighSeas
-
-[Hack Club HighSeas](https://highseas.hackclub.com/) is a self-hosted WakaTime-compatible backend. To use MultiTime with HighSeas:
-
-1. Set up your HighSeas instance
-2. Get your API key from HighSeas
-3. Add HighSeas as a backend in your `config.toml`:
-```toml
-[[backends]]
-name = "HackClub WakaTime"
-url = "https://waka.hackclub.com"
-api_key = "your-highseas-api-key"
-is_primary = false  # true if you want to use HighSeas for status queries
-```
-
 ## Supported Endpoints
 
 MultiTime currently supports these WakaTime API endpoints:
 
 ### POST `/users/current/heartbeats`
+
 - Forwards coding activity heartbeats to all configured backends
 - Returns the response from the primary backend
 - Adds custom user agent identifier
 
 ### POST `/users/current/heartbeats.bulk`
+
 - Forwards multiple heartbeats to all configured backends
 - Returns the response from the primary backend
 - Adds custom user agent identifier
 
 ### GET `/users/current/statusbar/today`
+
 - Retrieves today's coding activity summary from the primary backend
 - Used by IDE plugins for status bar updates
 - Returns cached data if available, empty summary if not
@@ -107,5 +102,6 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 Created by [JasonLovesDoggo](https://github.com/JasonLovesDoggo)
 
 Special thanks to:
+
 - [WakaTime](https://wakatime.com) for their amazing time tracking platform
 - [Hack Club](https://hackclub.com) for creating HighSeas

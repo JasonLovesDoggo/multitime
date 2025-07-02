@@ -27,6 +27,7 @@ func main() {
 	http.HandleFunc("/users/current/heartbeats", handleHeartbeat)
 	http.HandleFunc("/users/current/heartbeats.bulk", handleHeartbeatsBulk)
 	http.HandleFunc("/users/current/statusbar/today", handleStatusBar)
+	http.HandleFunc("/users/current/stats/last_7_days", handleStatsLast7Days)
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		// The "/" matches anything not handled elsewhere. If it's not the root
 		// then report not found.
